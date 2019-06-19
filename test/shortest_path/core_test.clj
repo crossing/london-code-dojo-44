@@ -15,7 +15,13 @@
                (sut/shortest-path graph :a :b)))
         (testing "should work backwards"
           (is (= [:b :a]
-                 (sut/shortest-path graph :b :a))))))))
+                 (sut/shortest-path graph :b :a)))))))
+  (testing "for a graph of three nodes"
+    (let [graph {:a #{:b}
+                 :b #{:c}}]
+      (testing "should find path from a to b"
+        (is (= [:a :b :c]
+               (sut/shortest-path graph :a :c)))))))
 
 (deftest nodes
   (testing "for a graph of two nodes"
@@ -34,16 +40,16 @@
   (testing "for a graph of two nodes"
     (let [graph {:a #{:b}}]
       (testing "should return the neighbours"
-        (is (= [:b]
+        (is (= #{:b}
                (sut/neighbours graph :a))))
       (testing "should find the implicit neighbours of b"
-        (is (= [:a]
+        (is (= #{:a}
                (sut/neighbours graph :b))))))
   (testing "for a graph of three nodes"
     (let [graph {:a #{:b}
                  :b #{:c}}]
       (testing "should find both a and c for b"
-        (is (= [:a :c]
+        (is (= #{:a :c}
                (sut/neighbours graph :b)))))))
 
 ;; SPECS
