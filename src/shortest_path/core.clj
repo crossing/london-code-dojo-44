@@ -1,19 +1,31 @@
 (ns shortest-path.core)
 
-#_(defn nodes [graph]
-  (set (flatten (map (fn [x] (if (set? x) (vec x))) graph))))
-
-(defn nodes [graph]
+(defn get-nodes [graph]
   (dedupe (concat (keys graph)
                   (apply concat (vals graph)))))
 
-(defn neighbours [graph node]
-  (let [first-case (graph node)
-        second-case (map key (filter (fn [[k v]] (v node)) graph))]
-    (concat first-case second-case)))
+(defn get-neighbours [graph node]
+  (let [->node key
+        implied-node? (fn [[_ neighbours]] (neighbours node))
+        implicit-nodes (->> graph
+                            (filter implied-node?)
+                            (map ->node))
+        explicit-nodes (graph node)]
+    (into #{} (concat explicit-nodes implicit-nodes))))
+
+(defn tried-all-nodes? [path neighbours]
+  (= (set path) neighbours))
 
 (defn shortest-path [graph start end]
-  (let [ns (neighbours graph start)]
-    (if ((set ns) end)
-      [start end]
-      [start])))
+  (loop [path []
+         start start]
+    (let [neighbours (get-neighbours graph start)]
+      (cond (neighbours end)
+            (conj path start end)
+
+            (tried-all-nodes? path neighbours) ;; reached the end
+            (conj path start)
+
+            :else
+            (recur (conj path start)
+                   (first neighbours))))))
