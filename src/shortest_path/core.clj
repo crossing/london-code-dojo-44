@@ -14,9 +14,7 @@
       [n])))
 
 (defn shortest-path [graph start end]
-  (let [[n neighbours] (first graph)]
-    (if (seq neighbours)
-      (if (= n start)
-        (nodes graph)
-        (reverse (shortest-path graph end start)))
-      [n])))
+  (let [ns (neighbours graph start)]
+    (if ((set ns) end)
+      [start end]
+      [start])))
