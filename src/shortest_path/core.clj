@@ -4,14 +4,13 @@
   (set (flatten (map (fn [x] (if (set? x) (vec x))) graph))))
 
 (defn nodes [graph]
-  (let [[n neighbours] (first graph)]
-    (concat [n] neighbours)))
+  (dedupe (concat (keys graph)
+                  (apply concat (vals graph)))))
 
 (defn neighbours [graph node]
-  (let [[n [neighbour & _]] (first graph)]
-    (if (= n node)
-      [neighbour]
-      [n])))
+  (let [first-case (graph node)
+        second-case (map key (filter (fn [[k v]] (v node)) graph))]
+    (concat first-case second-case)))
 
 (defn shortest-path [graph start end]
   (let [ns (neighbours graph start)]

@@ -22,7 +22,13 @@
     (let [graph {:a #{:b}}]
       (testing "should return the all the nodes"
         (is (= [:a :b]
-               (sut/nodes graph)))))))
+               (sut/nodes graph))))))
+  (testing "for a graph of three nodes"
+      (let [graph {:a #{:b}
+                   :b #{:c}}]
+        (testing "should find both a and c for b"
+          (is (= [:a :b :c]
+                 (sut/nodes graph)))))))
 
 (deftest neighbours
   (testing "for a graph of two nodes"
@@ -33,7 +39,12 @@
       (testing "should find the implicit neighbours of b"
         (is (= [:a]
                (sut/neighbours graph :b))))))
-  )
+  (testing "for a graph of three nodes"
+    (let [graph {:a #{:b}
+                 :b #{:c}}]
+      (testing "should find both a and c for b"
+        (is (= [:a :c]
+               (sut/neighbours graph :b)))))))
 
 ;; SPECS
 ;; shortest-path should take a graph
