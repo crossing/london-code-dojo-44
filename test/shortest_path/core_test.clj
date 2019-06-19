@@ -3,11 +3,11 @@
             [shortest-path.core :as sut]))
 
 (deftest shortest-path
-  (testing "for the empty graph"
-    (let [empty-graph []]
+  (testing "for the graph of one node"
+    (let [graph [:a #{}]]
       (testing "should produce no paths"
         (is (= []
-               (sut/shortest-path empty-graph)))))))
+               (sut/shortest-path graph :a :a)))))))
 
 ;; SPECS
 ;; shortest-path should take a graph
